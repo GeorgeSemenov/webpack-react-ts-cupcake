@@ -7,11 +7,14 @@ export async function fetchData(): Promise<fetchResultType> {
     const responses = await Promise.allSettled(
       URLsArr.map((url) => fetch(url))
     );
-    const resultPromises = responses.map((response) => {
+    const resultPromises = responses.map((response, index) => {
       if (response.status === "fulfilled") {
         return response.value.json();
       } else {
-        throw new Error("Fetching data error");
+        console.error(
+          `error occured while fetching data from ${URLsArr[index]}`
+        );
+        fetchResult.error = "Fetching data error";
         return undefined;
       }
     });

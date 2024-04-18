@@ -1,7 +1,7 @@
 export type fetchResultType = {
   isLoading: boolean;
   error?: any;
-  result?: { rates: ratesType } | undefined[];
+  result?: ({ rates: ratesType } | undefined)[];
 };
 
 export type ratesType = {
