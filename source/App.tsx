@@ -1,33 +1,30 @@
 import * as React from "react";
 import { useEffect } from "react";
-import { URLs } from "./constants.ts";
-interface IFetchedData {
-  rates?: { RUB: string; EUR: string; USD: string };
-}
+import { fetchData } from "./api/fetchData";
+
 export default function App() {
-  const [componentData, setComponentData] = React.useState<IFetchedData>({});
+  const [componentData, setComponentData] = React.useState<any>();
   const [isLoading, setIsLoading] = React.useState(true);
+  const [err, setErr] = React.useState();
   useEffect(() => {
-    fetch(URLs.first)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error(`Can't fetch data.`);
-      })
-      .then((fetchedData: IFetchedData) => {
-        console.log(fetchedData);
-        setComponentData(fetchedData);
-        setIsLoading(false);
-      });
-  }, []);
+    fetchData().then((fetchResult) => {
+      const { isLoading, result, error } = fetchResult;
+      setIsLoading(isLoading);
+      setComponentData(result);
+      if (error) setErr(error);
+    });
+    return () => {
+      setErr(undefined);
+    };
+  }, [componentData]);
   return (
     <>
-      <p>Приложение работает, что странно ...</p>
       {isLoading ? (
         <p>Ожидайте завершения загрузки</p>
+      ) : err ? (
+        <p>В работе приложения произошла ошибка: {JSON.stringify(err)}</p>
       ) : (
-        <div>{componentData.rates.EUR}</div>
+        <div>{JSON.stringify(componentData)}</div>
       )}
     </>
   );

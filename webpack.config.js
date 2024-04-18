@@ -34,6 +34,13 @@ const common = merge([
       assetModuleFilename: "assets/[hash][ext][query]", //Все ресурсы помеченные как type:'asset', или type: 'asset/resource' будут сохраняться теперь в папку assets в папке build
       clean: true,
     },
+    resolve: {
+      //По умолчанию webpack ищет файлы с указанными расширенями.
+      //Поэтому если ты делаешь импорт без расширений - вебпак будет ругаться.
+      //Но если указать в данном модуле набор допустимых расширений, то вебпак не будет ругать,
+      //а поробует сам найти файлы с указанными расширениями
+      extensions: [".ts", ".tsx", ".js", ".jsx"],
+    },
     plugins: [].concat(
       pages.map((page) => {
         return new HtmlWebpackPlugin({
