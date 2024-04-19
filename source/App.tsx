@@ -3,13 +3,16 @@ import { useEffect } from "react";
 import { fetchData } from "./api/fetchData";
 import { ratesType } from "./api/types";
 import RatesTable from "./components/RatesTable";
+import { URLsArr, URLsArrLongPoll } from "./constants";
 
 export default function App() {
   const [rates, setRates] = React.useState<(ratesType | undefined)[]>();
   const [isLoading, setIsLoading] = React.useState(true);
+  const [isFirstLoad, setIsFirstLoad] = React.useState(true);
   const [err, setErr] = React.useState();
   useEffect(() => {
-    fetchData().then((fetchResult) => {
+    const urls = isFirstLoad ? URLsArr : URLsArrLongPoll;
+    fetchData(urls).then((fetchResult) => {
       const { isLoading, result, error } = fetchResult;
       setIsLoading(isLoading);
       const onlyRates = result.reduce((cur, next) => {
@@ -23,6 +26,9 @@ export default function App() {
       setErr(undefined);
     };
   }, [rates]);
+  useEffect(() => {
+    setIsFirstLoad(false);
+  }, []);
   return (
     <>
       {isLoading ? (

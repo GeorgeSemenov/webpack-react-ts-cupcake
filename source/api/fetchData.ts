@@ -1,7 +1,6 @@
-import { URLsArr } from "../constants";
 import { fetchResultType } from "./types";
 
-export async function fetchData(): Promise<fetchResultType> {
+export async function fetchData(URLsArr: URL[]): Promise<fetchResultType> {
   const fetchResult: fetchResultType = { isLoading: true };
   try {
     const responses = await Promise.allSettled(
